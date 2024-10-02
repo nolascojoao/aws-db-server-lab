@@ -26,22 +26,34 @@ aws ec2 create-vpc --cidr-block 10.0.0.0/16 \
 ## Step 2: Create Subnets
 #### 2.1. Create Public Subnet 1 in Availability Zone A with CIDR block 10.0.0.0/24:
 ```bash
-aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.0.0/24 --availability-zone <az-a> \
+aws ec2 create-subnet \
+  --vpc-id <vpc-id> \
+  --cidr-block 10.0.0.0/24 \
+  --availability-zone <az-a> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=public-subnet-1}]'
 ```
 #### 2.2. Create Private Subnet 1 in Availability Zone A with CIDR block 10.0.1.0/24:
 ```bash
-aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.1.0/24 --availability-zone <az-a> \
+aws ec2 create-subnet \
+  --vpc-id <vpc-id> \
+  --cidr-block 10.0.1.0/24 \
+  --availability-zone <az-a> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=private-subnet-1}]'
 ```
 #### 2.3. Create Public Subnet 2 in Availability Zone B with CIDR block 10.0.2.0/24:
 ```bash
-aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.2.0/24 --availability-zone <az-b> \
+aws ec2 create-subnet \
+  --vpc-id <vpc-id> \
+  --cidr-block 10.0.2.0/24 \
+  --availability-zone <az-b> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=public-subnet-2}]'
 ```
 #### 2.4. Create Private Subnet 2 in Availability Zone B with CIDR block 10.0.3.0/24:
 ```bash
-aws ec2 create-subnet --vpc-id <vpc-id> --cidr-block 10.0.3.0/24 --availability-zone <az-b> \
+aws ec2 create-subnet \
+  --vpc-id <vpc-id> \
+  --cidr-block 10.0.3.0/24 \
+  --availability-zone <az-b> \
   --tag-specifications 'ResourceType=subnet,Tags=[{Key=Name,Value=private-subnet-2}]'
 ```
 
@@ -55,7 +67,9 @@ aws ec2 create-internet-gateway \
 ```
 #### 3.2. Attach the internet gateway to the VPC:
 ```bash
-aws ec2 attach-internet-gateway --vpc-id <vpc-id> --internet-gateway-id <igw-id>
+aws ec2 attach-internet-gateway \
+  --vpc-id <vpc-id> \
+  --internet-gateway-id <igw-id>
 ```
 
 ---
@@ -68,7 +82,8 @@ aws ec2 allocate-address --domain vpc
 #### 4.2. Create the NAT Gateway in Public Subnet 1:
 ```bash
 aws ec2 create-nat-gateway \
-  --subnet-id <public-subnet-1-id> --allocation-id <elastic-ip-allocation-id>
+  --subnet-id <public-subnet-1-id> \
+  --allocation-id <elastic-ip-allocation-id>
 ```
 
 ---
@@ -76,12 +91,15 @@ aws ec2 create-nat-gateway \
 ## Step 5: Create Route Tables and Associate with Subnets
 #### 5.1. Create a route table for public subnets and associate with Public Subnet 1 and Public Subnet 2:
 ```bash
-aws ec2 create-route-table --vpc-id <vpc-id> \
+aws ec2 create-route-table \
+  --vpc-id <vpc-id> \
   --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=public-route-table}]'
 ```
 #### 5.2. Create a route to the internet through the internet gateway:
 ```bash
-aws ec2 create-route --route-table-id <public-route-table-id> --destination-cidr-block 0.0.0.0/0 \
+aws ec2 create-route \
+  --route-table-id <public-route-table-id> \
+  --destination-cidr-block 0.0.0.0/0 \
   --gateway-id <igw-id>
 ```
 #### 5.3. Associate the route table with Public Subnet 1 and Public Subnet 2:
@@ -91,12 +109,15 @@ aws ec2 associate-route-table --route-table-id <public-route-table-id> --subnet-
 ```
 #### 5.4. Create a route table for private subnets and associate with Private Subnet 1 and Private Subnet 2:
 ```bash
-aws ec2 create-route-table --vpc-id <vpc-id> \
+aws ec2 create-route-table \
+  --vpc-id <vpc-id> \
   --tag-specifications 'ResourceType=route-table,Tags=[{Key=Name,Value=private-route-table}]'
 ```
 #### 5.5. Create a route to the NAT Gateway for internet access from private subnets:
 ```bash
-aws ec2 create-route --route-table-id <private-route-table-id> --destination-cidr-block 0.0.0.0/0 \
+aws ec2 create-route \
+  --route-table-id <private-route-table-id> \
+  --destination-cidr-block 0.0.0.0/0 \
   --nat-gateway-id <nat-gateway-id>
 ```
 #### 5.6. Associate the private route table with Private Subnet 1 and Private Subnet 2:
