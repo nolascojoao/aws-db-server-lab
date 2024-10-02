@@ -190,7 +190,8 @@ aws rds create-db-instance \
   --storage-autoscaling false \
   --vpc-security-group-ids <rds-sg-id> \
   --db-subnet-group-name <subnet-group-name> \
-  --multi-az --availability-zone <az-a> \
+  --multi-az \
+  --db-subnet-group-name mydbsubnetgroup \
   --backup-retention-period 0
 ```
 #### 8.2. Confirm the creation of the RDS instance by describing it:
