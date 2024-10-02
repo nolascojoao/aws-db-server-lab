@@ -194,9 +194,11 @@ aws rds create-db-instance \
   --db-subnet-group-name mydbsubnetgroup \
   --backup-retention-period 0
 ```
-#### 8.2. Confirm the creation of the RDS instance by describing it:
+#### 8.2. Verify RDS creation and retrieve the endpoint:
 ```bash
-aws rds describe-db-instances --db-instance-identifier mydbinstance
+aws rds describe-db-instances \
+  --db-instance-identifier database-1 \
+  --query "DBInstances[*].[Endpoint.Address,AvailabilityZone,PreferredBackupWindow,BackupRetentionPeriod,DBInstanceStatus]"
 ```
 
 ---
