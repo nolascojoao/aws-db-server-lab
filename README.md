@@ -1,4 +1,4 @@
-# AWS Database Creation *(IN PROGRESS)*
+# AWS RDS Creation *(IN PROGRESS)*
 
 <div align="center">
   <img src="screenshot/architecture-lab2.jpg" width=""/>
@@ -128,29 +128,80 @@ aws ec2 associate-route-table --route-table-id <private-route-table-id> --subnet
 
 ---
 
-## Step 6: Set Up RDS Primary and Secondary in Private Subnets
-#### 6.1. Create an RDS instance in Private Subnet 1 (primary) and Private Subnet 2 (secondary) with Multi-AZ enabled:
+## Step 6: Creat Security Groups
+#### 6.1. Create a security group for the EC2 instance that allows HTTP traffic:
+```bash
+aws ec2 create-security-group \
+  --group-name web-sg \
+  --description "Security group for web server" \
+  --vpc-id <vpc-id>
+```
+#### 6.2. Allow inbound HTTP traffic to the EC2 security group:
+```bash
+aws ec2 authorize-security-group-ingress \
+  --group-id <web-sg-id> \
+  --protocol tcp --port 80 \
+  --cidr 0.0.0.0/0
+```
+---
+
+⚠️ **Important:** To troubleshoot your EC2 instance, allow access to port 22 (SSH) in your security group.
+
+---
+#### 6.3. Create a security group for RDS that allows incoming traffic from the web server on port 3306 (MySQL):
+```bash
+aws ec2 create-security-group \
+  --group-name rds-sg \
+  --description "Security group for RDS" \
+  --vpc-id <vpc-id>
+```
+#### 6.4. Allow inbound traffic to the RDS security group:
+```bash
+aws ec2 authorize-security-group-ingress \
+  --group-id <rds-sg-id> \
+  --protocol tcp --port 3306 \
+  --source-group <web-sg-id>
+```
+
+---
+
+## Step 7: Create a Subnet Group for RDS
+#### 7.1. Create a subnet group for the RDS instance:
+```bash
+aws rds create-db-subnet-group \
+  --db-subnet-group-name mydbsubnetgroup \
+  --db-subnet-group-description "Subnet group for RDS" \
+  --subnet-ids <private-subnet-1-id> <private-subnet-2-id>
+```
+
+---
+
+## Step 8: Set Up RDS Primary and Secondary in Private Subnets
+#### 8.1. Create an RDS instance in Private Subnet 1 (primary) and Private Subnet 2 (secondary) with Multi-AZ enabled:
 ```bash
 aws rds create-db-instance \
   --db-instance-identifier mydbinstance \
   --db-instance-class db.t3.micro \
   --engine mysql \
-  --master-username <username> --master-user-password <password> \
+  --engine-version <version> \
+  --master-username <username> \
+  --master-user-password <password> \
   --allocated-storage 20 \
+  --storage-autoscaling false \
   --vpc-security-group-ids <rds-sg-id> \
   --db-subnet-group-name <subnet-group-name> \
   --multi-az --availability-zone <az-a> \
-  --backup-retention-period 7
+  --backup-retention-period 0
 ```
-#### 6.2. Confirm the creation of the RDS instance by describing it:
+#### 8.2. Confirm the creation of the RDS instance by describing it:
 ```bash
 aws rds describe-db-instances --db-instance-identifier mydbinstance
 ```
 
 ---
 
-## Step 7: Launch Web Server in Public Subnet 2
-#### 7.1. Launch an EC2 instance with an Amazon Linux 2023 AMI in Public Subnet 2 with a security group that allows HTTP traffic (port 80):
+## Step 9: Launch Web Server in Public Subnet 2
+#### 9.1. Launch an EC2 instance with an Amazon Linux 2023 AMI in Public Subnet 2 with a security group that allows HTTP traffic (port 80):
 ```bash
 aws ec2 run-instances \
   --image-id ami-0ebfd941bbafe70c6 \
@@ -175,20 +226,20 @@ $password = "your_password"; // Replace with your RDS password
 
 ---
 
-## Step 8: Clean Up Resources (Optional)
-#### 8.1. Terminate the EC2 instance:
+## Step 10: Clean Up Resources (Optional)
+#### 10.1. Terminate the EC2 instance:
 ```bash
 aws ec2 terminate-instances --instance-ids <instance-id>
 ```
-#### 8.2. Delete the RDS instance:
+#### 10.2. Delete the RDS instance:
 ```bash
 aws rds delete-db-instance --db-instance-identifier mydbinstance --skip-final-snapshot
 ```
-#### 8.3. Delete the NAT gateway:
+#### 10.3. Delete the NAT gateway:
 ```bash
 aws ec2 delete-nat-gateway --nat-gateway-id <nat-gateway-id>
 ```
-#### 8.4. Delete the subnets, route tables, and VPC:
+#### 10.4. Delete the subnets, route tables and VPC:
 ```bash
 aws ec2 delete-subnet --subnet-id <subnet-id>
 aws ec2 delete-route-table --route-table-id <route-table-id>
