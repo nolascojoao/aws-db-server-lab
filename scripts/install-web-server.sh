@@ -3,7 +3,7 @@
 # Update the instance packages
 sudo yum update -y
 # Install Apache and MariaDB server 
-sudo yum install -y httpd mariadb-server
+sudo yum install -y httpd mariadb105-server
 # Start Apache and MariaDB
 sudo systemctl start httpd
 sudo systemctl start mariadb
