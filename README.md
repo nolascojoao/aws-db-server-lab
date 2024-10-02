@@ -222,9 +222,10 @@ aws ec2 run-instances \
 
 Edit `install-web-server.sh` with your RDS credentials:
 ```php
-$servername = "your_rds_endpoint"; // Replace with your RDS endpoint
-$username = "your_username"; // Replace with your RDS username
-$password = "your_password"; // Replace with your RDS password
+sudo sed -i "s/\$host = 'your-rds-endpoint.amazonaws.com';/\$host = 'REPLACE_WITH_YOUR_RDS_ENDPOINT';/" /var/www/html/index.php
+sudo sed -i "s/\$username = 'your_rds_username';/\$username = 'REPLACE_WITH_YOUR_RDS_USERNAME';/" /var/www/html/index.php
+sudo sed -i "s/\$password = 'your_rds_password';/\$password = 'REPLACE_WITH_YOUR_RDS_PASSWORD';/" /var/www/html/index.php
+sudo sed -i "s/\$dbname = 'your_database_name';/\$dbname = 'REPLACE_WITH_YOUR_DATABASE_NAME';/" /var/www/html/index.php
 ```
 
 ---
