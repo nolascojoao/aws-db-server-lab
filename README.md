@@ -221,6 +221,7 @@ aws ec2 run-instances \
 **Before launching EC2**
 
 Edit `install-web-server.sh` with your RDS credentials:
+- Replace `REPLACE_WITH_YOUR_*` placeholders in with your specific values
 ```php
 sudo sed -i "s/\$host = 'your-rds-endpoint.amazonaws.com';/\$host = 'REPLACE_WITH_YOUR_RDS_ENDPOINT';/" /var/www/html/index.php
 sudo sed -i "s/\$username = 'your_rds_username';/\$username = 'REPLACE_WITH_YOUR_RDS_USERNAME';/" /var/www/html/index.php
@@ -243,9 +244,37 @@ aws rds delete-db-instance --db-instance-identifier mydbinstance --skip-final-sn
 ```bash
 aws ec2 delete-nat-gateway --nat-gateway-id <nat-gateway-id>
 ```
-#### 10.4. Delete the subnets, route tables and VPC:
+#### 10.4. Release the Elastic IP:
 ```bash
-aws ec2 delete-subnet --subnet-id <subnet-id>
-aws ec2 delete-route-table --route-table-id <route-table-id>
+aws ec2 release-address --allocation-id <elastic-ip-allocation-id>
+```
+#### 10.5. Detach and Delete the Internet Gateway from the VPC:
+```bash
+aws ec2 detach-internet-gateway --vpc-id <vpc-id> --internet-gateway-id <igw-id>
+aws ec2 delete-internet-gateway --internet-gateway-id <igw-id>
+```
+#### 10.6. Delete the RDS subnet group:
+```bash
+aws rds delete-db-subnet-group --db-subnet-group-name mydbsubnetgroup
+```
+#### 10.7 Delete the security groups:
+```bash
+aws ec2 delete-security-group --group-id <rds-security-group-id>
+aws ec2 delete-security-group --group-id <ec2-security-group-id>
+```
+#### 10.8. Delete the subnets:
+```bash
+aws ec2 delete-subnet --subnet-id <private-subnet-1-id>
+aws ec2 delete-subnet --subnet-id <private-subnet-2-id>
+aws ec2 delete-subnet --subnet-id <public-subnet-1-id>
+aws ec2 delete-subnet --subnet-id <public-subnet-2-id>
+```
+#### 10.9. Delete the route tables:
+```bash
+aws ec2 delete-route-table --route-table-id <private-route-table-id>
+aws ec2 delete-route-table --route-table-id <public-route-table-id>
+```
+#### 10.10. Delete the VPC:
+```bash
 aws ec2 delete-vpc --vpc-id <vpc-id>
 ```
