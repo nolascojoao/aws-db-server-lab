@@ -1,4 +1,4 @@
-# AWS Database Migration *(IN PROGRESS)*
+# AWS Database Creation *(IN PROGRESS)*
 
 <div align="center">
   <img src="screenshot/architecture-lab2.jpg" width=""/>
