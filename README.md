@@ -391,7 +391,7 @@ aws rds delete-db-subnet-group --db-subnet-group-name mydbsubnetgroup
   <img src="screenshot/10.6.PNG" width=""/>
 </div>
 
-#### 10.7 Delete the security groups:
+#### 10.7. Delete the security groups:
 ```bash
 aws ec2 delete-security-group --group-id <rds-security-group-id>
 aws ec2 delete-security-group --group-id <ec2-security-group-id>
@@ -430,4 +430,15 @@ aws ec2 delete-vpc --vpc-id <vpc-id>
 
 <div align="center">
   <img src="screenshot/10.10.PNG" width=""/>
+</div>
+
+---
+
+## Conclusion
+In this lab I learned how to launch an RDS instance and connect it to a web server using an EC2 instance. This experience helped me understand how to integrate multiple AWS services with a focus on high availability.
+
+The total cost for this lab was $0.35, mainly due to the NAT Gateway associated with the EC2 instance. Below is the cost analysis from AWS:
+
+<div align="center">
+  <img src="screenshot/lab-costs.PNG" width=""/>
 </div>
