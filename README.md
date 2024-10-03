@@ -8,11 +8,18 @@ This lab focuses on creating an RDS instance with high availability and integrat
 
 ---
 
-# Objectives
+## Objectives
 
 - Launch an Amazon RDS DB instance with high availability.
 - Configure the DB instance to permit connections from web server.
 - Open a web application and interact with database.
+
+---
+
+⚠️ **Attention**
+---   
+- All the tasks will be completed via the command line using AWS CLI. Ensure you have the necessary permissions. [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- Charges may apply for completing this lab. [AWS Pricing](https://aws.amazon.com/pricing/)
 
 ---
 
