@@ -262,7 +262,6 @@ aws rds create-db-instance \
   --master-username <username> \
   --master-user-password <password> \
   --allocated-storage 20 \
-  --storage-autoscaling false \
   --vpc-security-group-ids <rds-sg-id> \
   --db-subnet-group-name <subnet-group-name> \
   --multi-az \
